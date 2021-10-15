@@ -121,6 +121,10 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
     if (!enabled)
         return;
 
+    if (!audioPlayer) {
+        [self configureAudioPlayer];
+    }
+
     [audioPlayer play];
     [self fireEvent:kAPPBackgroundEventActivate];
 }
@@ -134,11 +138,16 @@ NSString* const kAPPBackgroundEventDeactivate = @"deactivate";
         NSLog(@"BackgroundMode: On simulator apps never pause in background!");
     }
 
+    if (!audioPlayer) return;
+
     if (audioPlayer.isPlaying) {
         [self fireEvent:kAPPBackgroundEventDeactivate];
     }
 
     [audioPlayer pause];
+
+    [audioPlayer stop];
+    audioPlayer = nil;
 }
 
 /**
